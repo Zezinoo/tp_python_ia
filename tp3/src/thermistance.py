@@ -59,7 +59,10 @@ def piecewise_linreg(x, y, rmse_thresh=1e-2, min_len=5):
         else:
             m, b, j = last_good
         segs.append({'start': i0, 'end': j, 'm': m, 'b': b})
-        i0 = j   # next segment starts exactly where the previous ended
+        i0 = j
+        print(j)
+        if i0 == len(x) - 1:
+            break# next segment starts exactly where the previous ended
     return segs
 
 
@@ -84,8 +87,9 @@ def main(A , B, C):
         end = seg["end"]
         m = seg["m"]
         b = seg["b"]
-        if end > len(temperatures_c-1):
-            end = len(temperatures_c) - 1
+
+        #if end > len(temperatures_c-1):
+        #    end = len(temperatures_c) - 1
 
 
         slice = temperatures_c[start:end]
