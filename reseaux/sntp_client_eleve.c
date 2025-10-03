@@ -22,6 +22,7 @@
 #define SNTP_PORT           123         // SNTP port number
 #define SNTP_FRAME_LENGTH   48          // SNTP frame length
 
+#define MAX_LENGTH 64    
 
 /*  https://www.ietf.org/rfc/rfc2030.txt
 
@@ -91,6 +92,7 @@ int main( int argc, char **argv) {
     server_address.sin_port         = htons (SNTP_PORT);    // Set server port number, hton converts unsigned short integer into network byte order 
     server_address.sin_addr.s_addr  = ipv4DnsRequest(argv[1]);   // Set server IP address 
     if (server_address.sin_addr.s_addr == 0 ) {
+      printf("debug");
 		perror ("pb dns request") ;
 		exit(-1);
     }
@@ -101,6 +103,13 @@ int main( int argc, char **argv) {
      * WRITE HERE CODE TO OPEN UDP SOCKET
     
     */
+
+   sock = socket(AF_INET, SOCK_DGRAM, 17);
+    if ( sock < 0 ) {
+        perror("\nERROR WHILE OPENING SOCKET:\n");
+        exit(-1);
+    }
+    
         
     
     uint8_t request[SNTP_FRAME_LENGTH] = {0};   // String to be sent to server
@@ -121,6 +130,9 @@ int main( int argc, char **argv) {
      * WRITE HERE CODE TO SEND THE REQUEST PACKET
     
     */
+    printf("Sending request : %s " , request);
+    msg_length = strlen(request);
+    sendto(sock, request, msg_length, 0, (struct sockaddr *) &server_address, address_length);
     
     // Read SNTP reply
    /** TODO
@@ -128,10 +140,13 @@ int main( int argc, char **argv) {
     
     */
 
+    uint8_t recv_length = recvfrom(sock, reply, SNTP_FRAME_LENGTH, 0, (struct sockaddr *)&server_address,  &address_length);
+    
+
     
     // TODO : Display what has been received
     
-
+    printf( "Received %d chars: %s\n", recv_length, reply );
     
     // TODO : Get timestamp from the integer part of the "Transmit Timestamp" field (bytes 40-43)
    
