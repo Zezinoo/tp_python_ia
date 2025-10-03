@@ -131,7 +131,7 @@ int main( int argc, char **argv) {
     
     */
     printf("Sending request : %s " , request);
-    msg_length = strlen(request);
+    msg_length = SNTP_FRAME_LENGTH;
     sendto(sock, request, msg_length, 0, (struct sockaddr *) &server_address, address_length);
     
     // Read SNTP reply
@@ -146,7 +146,7 @@ int main( int argc, char **argv) {
     
     // TODO : Display what has been received
     
-    printf( "Received %d chars: %s\n", recv_length, reply );
+    printf( "Received %d chars", recv_length);
     
     // TODO : Get timestamp from the integer part of the "Transmit Timestamp" field (bytes 40-43)
    
