@@ -197,7 +197,7 @@ def test_05_suivre_rayon():
     # Trois rayons
     rays = [
         Rayon(Point(-3.0, 0.0),  Vecteur2D(1.0,  0.30)),
-        Rayon(Point(-2.0, -3.14159265/2), Vecteur2D(1.0,  0.50)),
+        Rayon(Point(-2.0, -3.14159265/4), Vecteur2D(1.0,  0.50)),
         Rayon(Point(-3.0, 1.5),  Vecteur2D(1.0, -0.25)),
     ]
     polylignes = [sc.suivre_rayon(r, nb_rebonds_max=10) for r in rays]

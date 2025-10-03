@@ -9,6 +9,18 @@ def exercice_1():
     produit = reduce(lambda x , y : x*y , longeurs)
     return carres, sup_dix , produit
 
+def exercice_2():
+    ages =  [18, 21, 25, 30, 35]
+    ages_en_mois = [a*12 for a in ages]
+    print(ages_en_mois)
+
+def gen_nombre_pairs(n):
+    for i in range(n):
+        if i %2 ==0 :
+            yield i
+
+
+
 
 def main():
     _ , _ ,c = exercice_1()

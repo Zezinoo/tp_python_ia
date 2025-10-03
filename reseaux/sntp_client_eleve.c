@@ -18,6 +18,8 @@
 #include <string.h> 
 #include <unistd.h>                     // Removes warning of implicit declaration when closing socket
 #include <netdb.h>						// DNS request
+#include <math.h>
+#include <time.h>
 
 #define SNTP_PORT           123         // SNTP port number
 #define SNTP_FRAME_LENGTH   48          // SNTP frame length
@@ -49,6 +51,19 @@
       |                    Transmit Timestamp (64)                    |
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 */
+
+void print_time_from_seconds(unsigned long seconds) {
+    time_t t = (time_t)seconds;
+
+    // Convert to broken-down UTC time
+    struct tm *utc_tm = gmtime(&t);
+
+    char buf[64];
+    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S UTC", utc_tm);
+
+    printf("Time: %s\n", buf);
+}
+
 
 /**
  * Perform an IPv4 DNS request
@@ -130,10 +145,9 @@ int main( int argc, char **argv) {
      * WRITE HERE CODE TO SEND THE REQUEST PACKET
     
     */
-    printf("Sending request : %s " , request);
+    //printf("Sending request : %s " , request);
     msg_length = SNTP_FRAME_LENGTH;
     sendto(sock, request, msg_length, 0, (struct sockaddr *) &server_address, address_length);
-    
     // Read SNTP reply
    /** TODO
      * WRITE HERE CODE TO RECEIVE RESPONSE PACKET
@@ -145,15 +159,44 @@ int main( int argc, char **argv) {
 
     
     // TODO : Display what has been received
+
+    printf( "Received %d chars \n", recv_length);
+
+    for(int i ; i < recv_length ; i++){
+      printf("%02X " , reply[i]);
+    }
+    printf("\n");
     
-    printf( "Received %d chars", recv_length);
-    
-    // TODO : Get timestamp from the integer part of the "Transmit Timestamp" field (bytes 40-43)
-   
-            
-    // TODO : Print values in time format
-  
-    
+      // TODO : Get timestamp from the integer part of the "Transmit Timestamp" field (bytes 40-43)
+         size_t start_index = 40;
+         const uint8_t *sub = reply + start_index;
+         size_t timestamp_len = 4;
+         long long number_of_seconds;
+         long long res;
+
+
+         printf("Timestamp in bytes : \n");
+         for(int i = 0  ; i < timestamp_len ; i++){
+            printf("%02X " , sub[i]);
+         }
+         printf("\n");
+
+    // TODO : Print values in time format    
+
+   uint32_t seconds =
+        ((uint32_t)sub[0] << 24) |
+        ((uint32_t)sub[1] << 16) |
+        ((uint32_t)sub[2] <<  8) |
+        ((uint32_t)sub[3]      ); //bitwise OR , bitshifting by n is multiplying by 2^n
+
+    printf("Number of seconds: %u\n", seconds);
+
+
+   time_t unix_seconds = seconds - 2208988800U; // POSIX time is different from NTP time
+   unix_seconds += 2 * 3600; // France is in GMT+2 time, add offset
+   struct tm *tm = gmtime(&unix_seconds);
+
+   printf("NTP time: %s", asctime(tm));
     
     close(sock);                                // Close socket
 }

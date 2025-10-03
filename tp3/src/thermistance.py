@@ -60,7 +60,6 @@ def piecewise_linreg(x, y, rmse_thresh=1e-2, min_len=5):
             m, b, j = last_good
         segs.append({'start': i0, 'end': j, 'm': m, 'b': b})
         i0 = j
-        print(j)
         if i0 == len(x) - 1:
             break# next segment starts exactly where the previous ended
     return segs
@@ -74,7 +73,10 @@ def main(A , B, C):
     resistances = calculer_resistance(temperatures_k , A , B , C)
     temperatures_resultat_c = calculer_temperature(resistances , A , B , C)
 
+
     diff = [temperatures_c[i] - temperatures_resultat_c[i] for i in range(len(temperatures_c))]
+    print("Temperature differences")
+    print(diff)
 
 
     idx_t_pl = []
