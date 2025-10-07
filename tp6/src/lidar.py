@@ -27,7 +27,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 # Import des briques géométriques
 from src.geometrie import Point, Vecteur2D, Scene
-
+import src.optique as optique
+import numpy as np
 
 @dataclass
 class MesureLidar:
@@ -47,7 +48,12 @@ class MesureLidar:
     pour lancer le rayon vaut : theta_abs = orientation + angle.
     """
     pass
+    angle : float
+    distance : float | None
 
+    def __str__(self):
+        return f"({self.angle}º , {self.distance})"
+@dataclass
 class Lidar2D:
     """
     Capteur LiDAR 2D minimaliste avec bruit de mesure optionnel.
@@ -76,4 +82,61 @@ class Lidar2D:
         Convertit les mesures polaires (angle relatif, distance) en points (x, y)
         dans le repère de la scène.
     """
+    position : Point
+    orientation : float
+    champ_de_vision : float
+    resolution : int
+    distance_max : float
+    sigma_bruit : float
+
+    def balayer(self , scene : optique.SceneOptique) -> List[MesureLidar] | None:
+        origine = self.position
+        n_rays = self.resolution
+        starting_angles = np.linspace(self.orientation, self.orientation + self.champ_de_vision , n_rays)
+        rayons = [optique.Rayon(origine ,
+                                self.__angle_to_direction(a))
+                                for a in starting_angles]
+        
+        list_impacts = []
+        for r , angle in zip(rayons , starting_angles):
+            impact = scene.premier_impact(r)
+            distance = impact.t
+            if distance > self.distance_max:
+                distance = None
+            if distance is None:
+                continue
+            list_impacts.append(MesureLidar(angle , distance))
+
+        if not list_impacts:
+            return None
+        
+        return list_impacts
+
+    def mesures_en_points(self ,mesures : List[MesureLidar]) -> List[Point]:
+        point_list = []
+        for m in mesures:
+            o_x = self.position.obtenir_x()
+            o_y = self.position.obtenir_y()
+            new_x = o_x + np.cos(m.angle) * m.distance
+            new_y = o_y + np.sin(m.angle) * m.distance
+            point_list.append(Point(new_x , new_y))
+
+        return point_list
+
+    def __lancer_rayon_pour_angle(scene : Scene , theta_abs) -> float | None:
+        pass
+
+    def __appliquer_bruit(d : float) -> float:
+        gaussian_noise = np.random.uniform(0 , 1.0)
+        return d + gaussian_noise
+
+    def __angle_to_direction(self , angle) -> Vecteur2D:
+        p_x = self.position.obtenir_x()
+        p_y = self.position.obtenir_y()
+        new_p_x = np.cos(angle)
+        new_p_y = np.sin(angle)
+        ray_direction = Vecteur2D(new_p_x , new_p_y)
+        ray_direction = ray_direction.normaliser()
+        return ray_direction
+    
     pass
