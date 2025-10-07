@@ -127,7 +127,7 @@ int main( int argc, char **argv) {
     
         
     
-    uint8_t request[SNTP_FRAME_LENGTH] = {0};   // String to be sent to server
+    uint8_t request[SNTP_FRAME_LENGTH] = {0};   // String to be sent to server , {0} fills the array with 0
     uint8_t reply  [SNTP_FRAME_LENGTH] = {0};   // String to be received from server
     uint8_t msg_length;                         // Length of received message
         
@@ -136,7 +136,7 @@ int main( int argc, char **argv) {
     //     b7-6: LI = Leap Indicator = 0 (no warning)
     //     b5-3: VN = Version Number = 4 (IPv4, IPv6 and OSI)
     //     b2-0: Mode = 3 (client)
-    request[0] = (0 << 6) | (4 << 3) | 3;
+    request[0] = (0 << 6) | (4 << 3) | 3; // 
     
     
     // Send SNTP request
@@ -145,7 +145,6 @@ int main( int argc, char **argv) {
      * WRITE HERE CODE TO SEND THE REQUEST PACKET
     
     */
-    //printf("Sending request : %s " , request);
     msg_length = SNTP_FRAME_LENGTH;
     sendto(sock, request, msg_length, 0, (struct sockaddr *) &server_address, address_length);
     // Read SNTP reply
@@ -155,8 +154,6 @@ int main( int argc, char **argv) {
     */
 
     uint8_t recv_length = recvfrom(sock, reply, SNTP_FRAME_LENGTH, 0, (struct sockaddr *)&server_address,  &address_length);
-    
-
     
     // TODO : Display what has been received
 

@@ -381,6 +381,8 @@ class SceneOptique(Scene):
         sc.ajouter(RectangleOptique(Point( 3.9, -2.5), 0.1, 5.0)) # droite
         # Obstacle circulaire
         sc.ajouter(CercleOptique(Point(0.5, 0.0), 1.0))
+        sc.ajouter(CercleOptique(Point(1.0, 0.5), 1.0))
+        sc.ajouter(CercleOptique(Point(1.0, -0.5), 1.0))
         return sc
 
     def tracer_rayons(self, polylignes: list[list[Point]] | None = None, montrer_boite: bool = True) -> None:
