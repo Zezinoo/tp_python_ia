@@ -10,7 +10,7 @@ int counter;
 
 void *runDuThread (void *p) {  // fonction principale du thread 1
 	int i ;
-	for ( i=0 ; i<1000000; i++ ){
+	for ( i=0 ; i<10000; i++ ){
 		//printf ("je suis le thread n° %s\n", (char *)p );
 		counter++;
 		//usleep(100000) ; // attente de 1e6 us

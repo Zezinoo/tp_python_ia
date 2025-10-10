@@ -17,9 +17,11 @@
 #include <string.h>
 #include <unistd.h>                     // Removes warning of implicit declaration when closing socket
 #include <ctype.h>
+#include <pthread.h>
 
 #define MAX_LENGTH 64                   // Maximum length for sent and received messages
 
+void * runDuThread(void* p);
 
 int main(int argc, char **argv) {
     
@@ -67,11 +69,21 @@ int main(int argc, char **argv) {
     
     // Wait for a connection (the program is paused if no pending connection)
     // then creates a dialogue socket when a client connects
+
+    while(1){
     int client_socket = accept(network_socket, (struct sockaddr *) &client_address, &address_length); 
-   
-    printf ("Client connected from %s\n", inet_ntoa(client_address.sin_addr));
-    int  msg_length;
-    char message[MAX_LENGTH];
+    printf("Client connected from %s\n" , inet_ntoa(client_address.sin_addr));
+    pthread_t th1 ; int ret ;
+    ret = pthread_create (&th1, NULL, runDuThread, (void *)&client_socket) ; // création thread 1
+    }
+    
+}
+
+
+void *runDuThread (void*p){
+
+    char message[MAX_LENGTH]; int msg_length;
+    int client_socket = *(int *)p; // casts p into integer then turns it into integer pointer
     do {
         // Read string from client through the dialogue socket
         msg_length = recv( client_socket, message, MAX_LENGTH-1, 0 );
@@ -98,5 +110,4 @@ int main(int argc, char **argv) {
     
     printf ("Client has disconnected\n");
     close(client_socket);
-    close(network_socket);
 }
