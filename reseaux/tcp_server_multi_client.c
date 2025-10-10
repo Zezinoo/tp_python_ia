@@ -22,6 +22,11 @@
 #define MAX_LENGTH 64                   // Maximum length for sent and received messages
 
 void * runDuThread(void* p);
+void * envoyerClavier(void *p);
+
+int n_clients;
+int socket_array[100];
+
 
 int main(int argc, char **argv) {
     
@@ -70,12 +75,35 @@ int main(int argc, char **argv) {
     // Wait for a connection (the program is paused if no pending connection)
     // then creates a dialogue socket when a client connects
 
+    pthread_t thClavier; int retClavier;
+    retClavier = pthread_create(&thClavier , NULL , envoyerClavier , (void*)socket_array);
+        
+    
+
     while(1){
-    int client_socket = accept(network_socket, (struct sockaddr *) &client_address, &address_length); 
-    printf("Client connected from %s\n" , inet_ntoa(client_address.sin_addr));
-    pthread_t th1 ; int ret ;
-    ret = pthread_create (&th1, NULL, runDuThread, (void *)&client_socket) ; // création thread 1
+        int client_socket = accept(network_socket, (struct sockaddr *) &client_address, &address_length); 
+        socket_array[n_clients] = client_socket;
+        printf("Client connected from %s\n" , inet_ntoa(client_address.sin_addr));
+        pthread_t th1 ; int ret ;
+        ret = pthread_create (&th1, NULL, runDuThread, (void *)&client_socket) ; // création thread 1
+        n_clients++;
     } //While loop always runs and accepts new connections
+    
+}
+
+
+void * envoyerClavier(void *p){
+    //printf("Im sending somet);
+    while (1)
+    {
+        char sent_msg[MAX_LENGTH];
+        fgets(sent_msg, MAX_LENGTH,stdin);
+        int msg_len = strlen(sent_msg);
+        //int socket_array[100] = (int)p;
+        for(int i = 0 ; i < n_clients;i++){
+            send(socket_array[i] , sent_msg , msg_len ,0 );
+        }
+    }
     
 }
 
