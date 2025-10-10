@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
     printf("Client connected from %s\n" , inet_ntoa(client_address.sin_addr));
     pthread_t th1 ; int ret ;
     ret = pthread_create (&th1, NULL, runDuThread, (void *)&client_socket) ; // création thread 1
-    }
+    } //While loop always runs and accepts new connections
     
 }
 
