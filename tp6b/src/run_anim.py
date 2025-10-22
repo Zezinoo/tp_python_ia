@@ -61,7 +61,7 @@ def main():
     oy, ox = np.where(sim.world.blocked)
     ax.scatter(ox, oy, s=3, c="gray", alpha=0.6, label="Obstacles", marker='s')
 
-    scat_ants = ax.scatter([], [], c="white", s=7, alpha=0.85, label="Fourmis")
+    scat_ants = ax.scatter([], [], c="red", s=7, alpha=0.85, label="Fourmis")
     ax.legend(loc="upper left")
 
     def update(_frame):
