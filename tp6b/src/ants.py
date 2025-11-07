@@ -137,6 +137,13 @@ class Ant:
         curr_cell =  world.grid[self.y , self.x]
         if curr_cell == CellType.FOOD and not self.has_food:
             self.has_food = True 
+            """
+            test patch for lower concentration
+            if self.path_stack:
+                new_pos = self.path_stack.pop()
+                self.x, self.y = new_pos
+                return self.x, self.y, world.p.deposit_amount_return
+            """
         elif curr_cell == CellType.NEST and self.has_food:
             self.has_food = False
             self.path_stack.clear()
@@ -170,6 +177,7 @@ class Ant:
                 eps = 1e-6
                 weights = [(eps + world.pher[fy,fx])**world.p.alpha for fx,fy in free_neighbors]
                 if self.has_food:
+                    print("shouldn't be here!")
                     for i,(cx,cy) in enumerate(free_neighbors):
                         neighbor_nest_distance =  abs(cx - world.nest[0]) + abs(cy - world.nest[1])
                         if  neighbor_nest_distance < self_nest_distance:
