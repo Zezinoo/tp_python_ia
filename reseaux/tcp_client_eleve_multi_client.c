@@ -23,7 +23,7 @@
 
 
 void *recvThread(void *p){
-    int client_socket = *(int *)p; //casts p into integer than turn it into integer pointer
+    int client_socket = *(int *)p; //casts p into integer then turn it into integer pointer
     char recv_msg[MAX_LENGTH];
 
     while (1)
@@ -112,24 +112,7 @@ void main( int argc, char **argv) {
         // Send message to the server through socket
 
         int msg_length = strlen(sent_msg);
-        send(client_socket, sent_msg, msg_length, 0);  
-
-        // Read up to MAX_LENGTH characters from server and put '\0' as last character to turn this array into a string
-        /*
-        msg_length = recv( client_socket, recv_msg, MAX_LENGTH-1, 0 );
-        if (msg_length == 0) {
-            printf("CLIENT HAS DISCONNECTED\n\n");
-            exit(0);
-        }
-        if (msg_length < 0) {
-            perror("ERROR ON DATA RECEPTION:\n");
-            exit(-1);
-        }
-        recv_msg[msg_length] = '\0';
-        // Display received message to console
-        //printf( "Received %d chars: %s", msg_length, recv_msg);
-        printf("%s" , recv_msg);
-        */  
+        send(client_socket, sent_msg, msg_length, 0);  // Send the message to server
 
     } while( strncmp(sent_msg, "bye", 3) );     // Loop until the sent message is "bye"
     

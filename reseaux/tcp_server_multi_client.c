@@ -44,7 +44,7 @@ void broadcastToAll(const char *msg , int exception) {
 void * envoyerClavier(void *p){
     while (1)
     {   printf("> ");
-        fflush(stdout); //empties stdout buffer to ensure prompt is displayed
+        fflush(stdout); //Empties stdout buffer to ensure prompt is displayed , because there no \n in printf
         char sent_msg[MAX_LENGTH];
         fgets(sent_msg, MAX_LENGTH,stdin);
 
@@ -174,14 +174,15 @@ int main(int argc, char **argv) {
         
     
 
-    while(1){
+    while(n_clients<MAX_LENGTH){
+        // Creating client socket and adding to array based on id
         int client_socket = accept(network_socket, (struct sockaddr *) &client_address, &address_length); 
         socket_array[n_clients] = client_socket;
+        // Displaying connection ip to host
         printf("Client connected from %s\n" , inet_ntoa(client_address.sin_addr));
         printf("> ");
         fflush(stdout);
         n_clients ++;
-        printf("Created with number %d\n", n_clients);
         
         // Creating ThreadArgs
         pthread_t th1 ; int ret ;
