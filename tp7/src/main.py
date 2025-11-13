@@ -158,7 +158,7 @@ class Exercices():
 
 
 if __name__ == "__main__":
-    exs_executed = [1]
+    exs_executed = [1,2,3,4,5]
 
     exs = Exercices()
 
