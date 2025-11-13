@@ -37,7 +37,7 @@ def make_richer_world(p: Params) -> Simulation:
 def main():
     p = Params(
         width=110, height=75, n_ants=600,
-        evap_rate=0.012, diffuse_rate=0.06,
+        evap_rate=0.012, diffuse_rate=0.08,
         deposit_amount=0.0,            # pas de dépôt à l'aller (optionnel)
         deposit_amount_return=2.0,     # dépôt fort au retour
         alpha=2.0, explore_eps=0.05, neighborhood="8", home_bias=1.6,
