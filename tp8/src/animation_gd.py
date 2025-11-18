@@ -26,7 +26,7 @@ def make_contours_and_path(
     3) Trace les lignes de niveau + la trajectoire (theta0_k, theta1_k)
     """
     # ---------- 1) Trajectoire par descente de gradient ----------
-    # TODO
+    theta_0 , theta_1 , J_hist , theta_hist = gradient_descent(X , y , alpha = alpha , n_iter= n_iter) 
 
     # ---------- 2) Grille de coût --------------------------------
     t0 = np.linspace(t0_bounds[0], t0_bounds[1], grid_size)
@@ -47,9 +47,10 @@ def make_contours_and_path(
     plt.title("Descente de gradient - courbes de niveau de J et trajectoire")
     plt.grid(True); plt.legend()
     if show: plt.show()
-    raise NotImplementedError("À implémenter: make_contours_and_path")
 
 
 if __name__ == "__main__":
+    X, y = generate_data()
+    make_contours_and_path(X = X , y = y)
     # Démo minimale (quand le TODO sera fait)
     pass
