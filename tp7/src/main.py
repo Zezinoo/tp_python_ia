@@ -51,9 +51,13 @@ class Exercices():
         print(df.info())
         print(df.describe())
         df['heure'] = pd.to_datetime(df['heure'], format='%H:%M:%S')
-        df = df.fillna(df.mean())
-        print('## Verification valeures manquantes ##')
         print(df.isna().sum())
+        df = df.fillna(df.mean())
+        # Remplacer les valeur manquantes d'une serie temporale peut avoir un impact importante sur la moyenne
+        # de la serie, ce qui peut ajouter bias a la analyse statistique. Comme alternative, on peut utiliser des 
+        # methodes como ffiln ou bfil pour essayer de preserver les characteristiques du jeu de donnes ou simplement
+        # enlever les points outliers de la serie temporale.
+        print('## Verification valeures manquantes ##')
         print(df.tail())
 
         fig , ax = plt.subplots( 2 , 2 , figsize = (10,4))
